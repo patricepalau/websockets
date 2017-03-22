@@ -1,18 +1,46 @@
+<html>
+<body>
+<h3>Client id: <span id="clientId"></span></h3>
+<h3>Incoming</h3>
+<div id="incomingMessage"></div>
+<h3>Outgoing</h3>
+<input type="text" id="outgoingMessage"> <button id="sendMessage">Send</button>
+</body>
+</html>
+
 <script>
+const incomingMessageArea = document.getElementById('incomingMessage');
+const outgoingMessage = document.getElementById('outgoingMessage');
+const sendBtn = document.getElementById('sendMessage');
+const clientIdArea = document.getElementById('clientId');
+const id = Date.now();
+clientIdArea.innerHTML = id;
+
+// socket
 const protocol = 'foo';
-const socketServerURL = 'ws://localhost:7080'
+const socketServerURL = 'ws://localhost:7080';
 const mySocket = new WebSocket(socketServerURL, protocol);
 
 mySocket.onopen = function (event) {
 	console.log('Received onopen event:', event);
-	mySocket.send('hello world from client!');
 }
 
 mySocket.onmessage = function (event) {
 	console.log('Received onmessage event:', event);
+	incomingMessageArea.innerHTML = event.data;
 }
 
 mySocket.onerror = function (event) {
 	console.log('Received onerror event:', event);
+	incomingMessageArea.innerHTML = event.data;
 }
+
+// UI
+sendBtn.addEventListener('click', function (e) {
+	const message = {
+		id: id,
+		text: outgoingMessage.value
+	};
+	mySocket.send(JSON.stringify(message));
+});
 </script>
