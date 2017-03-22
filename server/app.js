@@ -41,7 +41,7 @@ webSocketServer.on('request', function (request) {
     const now = new Date();
     console.log(`${now} - connection closed by remote host ${connection.remoteAddress}`);
     connections.filter(function (conn) {
-      retur (conn !== connection);
+      return (conn !== connection);
     })
   });
 });
